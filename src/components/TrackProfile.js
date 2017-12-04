@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import TrackPlay from './TrackPlay';
 
 class TrackProfile extends Component {
     constructor(props){
@@ -13,6 +14,9 @@ class TrackProfile extends Component {
             price: '',
             currency: '',
             country: '',
+            previewUrl: '',
+            playingUrl: '',
+            playing: false
         }
     }
 
@@ -23,6 +27,7 @@ class TrackProfile extends Component {
     .then(response => response.json())
     .then(json => {
       const track = json.results[0];
+      console.log(track);
       this.setState({
             name: track.trackName || track.collectionName,
             pic: track.artworkUrl100,
@@ -33,6 +38,7 @@ class TrackProfile extends Component {
             price: track.collectionPrice,
             currency: track.currency,
             country: track.country,
+            previewUrl: track.previewUrl,
         })
     })
     .catch(err => {
@@ -45,13 +51,44 @@ class TrackProfile extends Component {
       this.loadTrack(`${this.props.baseURL}/?id=${currentId}`);
     }
 
+    playAudio = (previewUrl) => {
+        let audio = new Audio(previewUrl);
+        if(!this.state.playing){
+            audio.play();
+            this.setState({
+                playingUrl: this.state.previewUrl,
+                playing: true,
+                audio
+            })           
+        }
+        else {
+            if(this.state.playingUrl === previewUrl){
+                this.state.audio.pause();
+                this.setState({
+                    playing: false
+                })
+            }
+            else{
+                 this.state.audio.pause();
+                 audio.play();
+                 this.setState({
+                    playingUrl: this.state.previewUrl,
+                    playing: true,
+                    audio
+                })
+            }
+        }
+        
+    }
+
     render(){
         return(           
             <div className="trackProfile">
-                <div className="trackName"><h1>{this.state.name}</h1></div>
+                <div className="trackName"><a href={this.state.link}><h1>{this.state.name}</h1></a></div>
                 <div className="trackCard">
-                    <div className="trackPic">
-                        <a href={this.state.link}><img alt={this.state.name} src={this.state.pic} /></a>
+                    <div className="trackPic" onClick={()=> this.playAudio(this.state.previewUrl)}>
+                        <img alt={this.state.name} src={this.state.pic} />
+                          <TrackPlay playingUrl={this.state.playingUrl} previewUrl={this.state.previewUrl}/> 
                     </div>
                     <div className="trackInfo">
                         <div>{`(${this.state.product}, ${this.state.country})`}</div>

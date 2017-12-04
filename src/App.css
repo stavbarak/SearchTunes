@@ -43,6 +43,9 @@ body {
 
 .trackPic{
   margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .trackCard{
@@ -54,4 +57,41 @@ body {
 
 .desc{
   font-size: 12px;
+}
+
+.trackPlay {
+  position: absolute;
+  width: 100px;
+  height: 33px;
+  display: flex;
+  justify-content: center;
+}
+
+.trackPlayInner {
+  position: absolute;
+  text-align: center;
+  font-size: 25px;
+  background-color: #000;
+  border-radius: 30px;
+  width: 39px;
+  height: 39px;
+  color: #fff;
+  padding-top: 6px;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.trackPlayInner:hover{
+  opacity: 0.8;
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+@keyframes fade-in{
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.8;
+  }
 }
